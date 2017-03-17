@@ -1,3 +1,4 @@
+require IEx
 defmodule OathAuthorizationFlow do
   use ExUnit.Case
   import Mock
@@ -7,7 +8,7 @@ defmodule OathAuthorizationFlow do
 
   defmacro with_auth_mock(block) do
     quote do
-      with_mock AuthRequest, [post: fn(params) -> AuthenticationClientMock.post(params) end] do
+      with_mock AuthRequest, [post: fn(params) -> AuthenticationClient.post(params) end] do
         unquote(block)
       end
     end
@@ -15,10 +16,13 @@ defmodule OathAuthorizationFlow do
 
   describe "posting to Spotify" do
     test "A body with an error raises Authentication error" do
-      with_mock AuthRequest, [post: fn(_params) -> AuthenticationClientMock.post(%{"error_description" => "bad client id"}) end] do
-        conn = conn :post, "/authenticate", %{"code" => "valid"}
-        conn = Plug.Conn.fetch_cookies(conn)
-        assert_raise AuthenticationError, "The Spotify API responded with: Invalid client", fn ->
+      one = 1
+      IEx.pry
+      #case AuthenticationClient.post(params) do
+      with_auth_mock do
+          conn = conn :post, "/authenticate", %{"code" => "valid"}
+          conn = Plug.Conn.fetch_cookies(conn)
+          assert_raise AuthenticationError, "The Spotify API responded with: Invalid client", fn ->
           Authentication.authenticate(conn, conn.params)
         end
       end

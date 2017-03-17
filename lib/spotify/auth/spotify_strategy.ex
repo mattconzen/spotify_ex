@@ -5,10 +5,10 @@ defmodule SpotifyStrategy do
         OAuth2.Client.new([
             strategy: __MODULE__,
             client_id: System.get_env("SPOTIFY_CLIENT_ID"),
-            client_secret: System.get_env("SPOTIFY_CLIENT_SECRET"),
+            client_secret: System.get_env("SPOTIFY_SECRET_KEY"),
             redirect_uri: System.get_env("OAUTH_REDIRECT_URI"),
             site: "https://accounts.spotify.com",
-            authorize_url: "",
+            authorize_url: "https://accounts.spotify.com/authorize",
             token_url: "https://accounts.spotify.com/api/token"
         ])
     end
@@ -16,12 +16,12 @@ defmodule SpotifyStrategy do
     def authorize_url! do
         OAuth2.Client.authorize_url!(
             client(),
-            scope: "playlist-read-private,playlist-read-collaborative,playlist-modify-public,playlist-modify-private"
+            scope: "playlist-read-private playlist-modify-public playlist-modify-private"
         )
     end
 
     def get_token!(params \\ [], headers \\ [], opts \\ []) do
-        OAuth.Client.get_token!(client(), params, headers, opts)
+        OAuth2.Client.get_token!(client(), params, headers, opts)
     end
 
     def authorize_url(client, params) do
