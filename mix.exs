@@ -35,7 +35,7 @@ defmodule Spotify.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :httpoison, :poison, :plug]]
+    [applications: [:logger, :httpoison, :poison, :plug, :oauth2]]
   end
 
   # Dependencies can be Hex packages:
@@ -49,9 +49,10 @@ defmodule Spotify.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:httpoison, "~> 0.9.0"},
+      {:httpoison, "~> 0.11.1"},
       {:poison, ">= 1.5.0"},
       {:plug, "~> 1.2.0"},
+      {:oauth2, "~> 0.9.1"},
       {:mock, "~> 0.1.1", only: :test},
       {:ex_doc, "~> 0.2", only: :dev},
       {:inch_ex, ">= 0.0.0", only: :docs}
